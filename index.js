@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import usuariosRoutes from './routes/usuariosRoutes.js'
 
 const app = express()
+app.use(express.json())
 dotenv.config()
 conectarDB()
 
