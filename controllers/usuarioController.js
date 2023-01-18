@@ -10,7 +10,7 @@ const registrar = async (req, res) => {
   try {
     const usuario = new Usuario(req.body);
     const usuarioAlmacenado = await usuario.save();
-    return res.json({ msg: "Usuario almacenado" });
+    return res.json({ msg: "Usuario almacenado", usuarioAlmacenado});
   } catch (error) {
     console.log(error);
   }
