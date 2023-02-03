@@ -1,4 +1,5 @@
 import Usuario from "../models/Usuario.js";
+import generarId from "../helpers/generarId.js";
 
 const registrar = async (req, res) => {
   const { email } = req.body;
@@ -9,6 +10,7 @@ const registrar = async (req, res) => {
   }
   try {
     const usuario = new Usuario(req.body);
+    usuario.token = generarId()
     const usuarioAlmacenado = await usuario.save();
     return res.json({ msg: "Usuario almacenado", usuarioAlmacenado});
   } catch (error) {
