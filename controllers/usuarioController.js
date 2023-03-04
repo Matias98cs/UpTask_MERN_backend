@@ -62,4 +62,88 @@ const confirmar = async (req, res) => {
   }
 };
 
-export { registrar, autenticar, confirmar };
+const olvidePassword = async (req, res) => {
+  const { email } = req.body;
+  const existeUsuario = await Usuario.findOne({ email });
+  if (!existeUsuario) {
+    const error = new Error("El usuario no existe");
+    return res.status(403).json({ msg: error.message });
+  }
+
+  try {
+    existeUsuario.token = generarId();
+    await existeUsuario.save();
+
+    //enviar el email
+    res.status(200).json({ msg: "Se envio el email con las instrucciones" });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const comprobarToken = async (req, res) => {
+  const { token } = req.params;
+  const tokenValido = await Usuario.findOne({ token });
+  if (tokenValido) {
+    res.status(200).json({ msg: "Token valido y el usuario existe" });
+  } else {
+    const error = new Error("Token no valido");
+    return res.status(404).json({ msg: error.message });
+  }
+};
+
+const nuevoPassword = async (req, res) => {
+  const { token } = req.params;
+  const { password } = req.body;
+
+  const usuario = await Usuario.findOne({ token });
+  if (!usuario) {
+    const error = new Error("Hubo un error");
+    return res.status(400).json({ msg: error.message });
+  }
+
+  try {
+    usuario.token = "";
+    usuario.password = password;
+    await usuario.save();
+    res.status(200).json({ msg: "Password Modificado Correctamente" });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const actalizarPassword = async (req, res) => {
+  const { id } = req.usuario;
+  const { pwd_actual, pwd_nuevo } = req.body;
+  const usuario = await Usuario.findById(id);
+  if (!usuario) {
+    const error = new Error("Hubo un error");
+    return res.status(400).json({ msg: error.message });
+  }
+
+  if (await usuario.comprobarPassword(pwd_actual)) {
+    usuario.password = pwd_nuevo;
+    await usuario.save();
+    res.json({
+      msg: "Password Almacenado Correctamente",
+    });
+  } else {
+    const error = new Error("El password es incorrecto");
+    return res.status(400).json({ msg: error.message });
+  }
+};
+
+const perfil = async (req, res) => {
+  const {usuario} = req
+  res.json(usuario)
+}
+export {
+  perfil,
+  registrar,
+  autenticar,
+  confirmar,
+  olvidePassword,
+  comprobarToken,
+  nuevoPassword,
+  actalizarPassword,
+};
