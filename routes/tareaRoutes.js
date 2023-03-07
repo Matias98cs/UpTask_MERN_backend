@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.post("/", checkAuth, agregarTarea);
 router
-  .route("/id")
+  .route("/:id")
   .get(checkAuth, obtenerTarea)
   .put(checkAuth, actualizarTarea)
   .delete(checkAuth, eliminarTarea);
