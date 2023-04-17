@@ -3,6 +3,7 @@ import generarId from "../helpers/generarId.js";
 import generarJWT from "../helpers/generarJWT.js";
 import emailRegistro from "../helpers/email.js";
 import olvidePasswordUsuario from "../helpers/emailOlvidePassword.js";
+import sendMailToActivate from "../helpers/emailRegistroGoogle.js";
 
 const registrar = async (req, res) => {
   const { email } = req.body;
@@ -17,6 +18,7 @@ const registrar = async (req, res) => {
     await usuario.save();
 
     emailRegistro(usuario);
+    sendMailToActivate(usuario)
     return res.json({
       msg: "Usuario creado correctamente, revisa tu correo para confirmar tu cuenta",
     });
