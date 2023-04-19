@@ -3,6 +3,8 @@ import generarId from "../helpers/generarId.js";
 import generarJWT from "../helpers/generarJWT.js";
 import emailRegistro from "../helpers/email.js";
 import olvidePasswordUsuario from "../helpers/emailOlvidePassword.js";
+import sendMailToActivate from "../helpers/emailRegistroGoogle.js";
+import sendEmialOlvidePasswordGoogle from "../helpers/emailOlvidePasswordGoogle.js";
 
 const registrar = async (req, res) => {
   const { email } = req.body;
@@ -16,7 +18,8 @@ const registrar = async (req, res) => {
     usuario.token = generarId();
     await usuario.save();
 
-    emailRegistro(usuario);
+    // emailRegistro(usuario);
+    sendMailToActivate(usuario);
     return res.json({
       msg: "Usuario creado correctamente, revisa tu correo para confirmar tu cuenta",
     });
@@ -59,8 +62,8 @@ const confirmar = async (req, res) => {
     return res.status(403).json({ msg: error.message });
   }
   try {
-    usuarioConfirmar.token = null;
     usuarioConfirmar.confirmado = true;
+    usuarioConfirmar.token = "";
     await usuarioConfirmar.save();
     res.status(200).json({ msg: "Usuario confirmado correctamente" });
   } catch (error) {
@@ -80,7 +83,8 @@ const olvidePassword = async (req, res) => {
     existeUsuario.token = generarId();
     await existeUsuario.save();
 
-    olvidePasswordUsuario(existeUsuario)
+    // olvidePasswordUsuario(existeUsuario);
+    sendEmialOlvidePasswordGoogle(existeUsuario)
     res.status(200).json({ msg: "Se envio el email con las instrucciones" });
   } catch (error) {
     console.log(error);
