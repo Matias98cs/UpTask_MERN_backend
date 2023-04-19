@@ -17,8 +17,8 @@ const registrar = async (req, res) => {
     usuario.token = generarId();
     await usuario.save();
 
-    emailRegistro(usuario);
-    sendMailToActivate(usuario)
+    // emailRegistro(usuario);
+    sendMailToActivate(usuario);
     return res.json({
       msg: "Usuario creado correctamente, revisa tu correo para confirmar tu cuenta",
     });
@@ -61,8 +61,8 @@ const confirmar = async (req, res) => {
     return res.status(403).json({ msg: error.message });
   }
   try {
-    usuarioConfirmar.token = null;
     usuarioConfirmar.confirmado = true;
+    usuarioConfirmar.token = "";
     await usuarioConfirmar.save();
     res.status(200).json({ msg: "Usuario confirmado correctamente" });
   } catch (error) {
@@ -82,7 +82,7 @@ const olvidePassword = async (req, res) => {
     existeUsuario.token = generarId();
     await existeUsuario.save();
 
-    olvidePasswordUsuario(existeUsuario)
+    olvidePasswordUsuario(existeUsuario);
     res.status(200).json({ msg: "Se envio el email con las instrucciones" });
   } catch (error) {
     console.log(error);
