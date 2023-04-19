@@ -4,6 +4,7 @@ import generarJWT from "../helpers/generarJWT.js";
 import emailRegistro from "../helpers/email.js";
 import olvidePasswordUsuario from "../helpers/emailOlvidePassword.js";
 import sendMailToActivate from "../helpers/emailRegistroGoogle.js";
+import sendEmialOlvidePasswordGoogle from "../helpers/emailOlvidePasswordGoogle.js";
 
 const registrar = async (req, res) => {
   const { email } = req.body;
@@ -82,7 +83,8 @@ const olvidePassword = async (req, res) => {
     existeUsuario.token = generarId();
     await existeUsuario.save();
 
-    olvidePasswordUsuario(existeUsuario);
+    // olvidePasswordUsuario(existeUsuario);
+    sendEmialOlvidePasswordGoogle(existeUsuario)
     res.status(200).json({ msg: "Se envio el email con las instrucciones" });
   } catch (error) {
     console.log(error);
